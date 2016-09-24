@@ -4,12 +4,12 @@ import co.flock.www.JWTToken;
 import co.flock.www.model.JWT.JWTPayload;
 import com.hackslash.constants.Constants;
 import com.hackslash.constants.RequestConstants;
-import com.hackslash.constants.SpecialChars;
+import com.hackslash.pojos.UserCalenderIPMap;
 import com.hackslash.pojos.UserTokenDetails;
+import com.hackslash.services.CalenderListService;
 import com.hackslash.services.SlashService;
 import com.hackslash.utils.JsonUtil;
 import com.hackslash.utils.ParseUtil;
-import com.hackslash.utils.ValidationUtil;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import static com.hackslash.utils.ValidationUtil.isStringSet;
-import static com.hackslash.utils.ValidationUtil.safeReturn;
 
 /**
  * Created by apple on 24/09/16.
@@ -47,7 +46,11 @@ public class FlockEvents extends HttpServlet{
 
         if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()) != null){
             if(requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_INSTALL.getValue())) {
-                Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(requestMap.get(RequestConstants.USER_TOKEN.getValue()), null, null, null));
+                String userToken = requestMap.get(RequestConstants.USER_TOKEN.getValue());
+                Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(userToken, null, null, null));
+                CalenderListService calenderListService = new CalenderListService(userToken);
+                String calendarId = calenderListService.makeRequest();
+                Constants.USER_CALENDERID_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserCalenderIPMap(RequestConstants.USER_ID.getValue(), calendarId));
                 System.out.println("User details first : "  + JsonUtil.jsonEncode(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue()))));
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.SLASH_COMMANDS.getValue())) {
                 System.out.println("Slash : " + JsonUtil.jsonEncode(requestMap));
