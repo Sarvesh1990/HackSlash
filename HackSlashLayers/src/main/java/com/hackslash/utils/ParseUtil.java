@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
 /**
  * Created by apple on 24/09/16.
  */
-public class RequestParse {
-    public static String getBody(HttpServletRequest request) throws IOException {
+public class ParseUtil {
+    public static String getPostRequestBody(HttpServletRequest request) throws IOException {
 
         String body = null;
         StringBuilder stringBuilder = new StringBuilder();

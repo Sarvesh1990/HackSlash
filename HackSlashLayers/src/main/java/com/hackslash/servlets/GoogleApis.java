@@ -1,25 +1,20 @@
-package com.hackslash.services;
+package com.hackslash.servlets;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
-import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.hackslash.utils.JsonUtil;
-import com.hackslash.utils.RefreshToken;
-import com.hackslash.utils.RequestParse;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
-import static com.hackslash.utils.ValidationUtil.isStringSet;
 import static com.hackslash.utils.ValidationUtil.safeReturn;
 
 /**
