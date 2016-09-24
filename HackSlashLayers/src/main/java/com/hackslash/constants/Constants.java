@@ -16,4 +16,5 @@ public class Constants {
     public static final String REDIRECT_URL = "http://47e2c11b.ngrok.io/HackSlashService/googleApis";
     public static final String CLIENT_ID = "297408651022-5hogd5neoi4om4iqajsc7fqih1enajbo.apps.googleusercontent.com";
     public static final String CLIENT_SECRET = "NaaYhfOrSliVs0URPlxvNjFS";
+    public static final String API_KEY = "AIzaSyBsAR7EZeJnmlOU0DwZfT1jeHBVwob7C_o";
 }

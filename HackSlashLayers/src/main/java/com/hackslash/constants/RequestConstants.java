@@ -13,7 +13,8 @@ public enum RequestConstants {
     , USER_TOKEN("userToken")
     , CODE("code")
     , STATE("state")
-    , FLOCK_VALIDATION_TOKEN("flockValidationToken");
+    , FLOCK_VALIDATION_TOKEN("flockValidationToken")
+    , TEXT("text");
 
     private String value;
     private byte[] bytes;
