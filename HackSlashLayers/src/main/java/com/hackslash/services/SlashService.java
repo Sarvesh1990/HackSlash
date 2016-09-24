@@ -18,6 +18,7 @@ public class SlashService {
     private HttpServletResponse response;
     private String senderUserId;
     private String senderAuthToken;
+    private String receiverCalenderId;
 
     public SlashService(Map<String, String> requestMap, HttpServletResponse response) {
         this.requestMap = requestMap;
@@ -45,20 +46,20 @@ public class SlashService {
                 } else if (parsedList.size() == 4) {
                     params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
                 }
-                url = UrlCreator.getInsertEventUrl();
+                url = UrlCreator.getInsertEventUrl(receiverCalenderId);
                 requestCreator.makePostRequest(url, params);
                 break;
             case "update" :
                 if (parsedList.size() == 5) {
-                    params =  updateEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
+                    params =  updateEvent(parsedList.get(2), parsedList.get(3), parsedList.get(4));
                 } else if (parsedList.size() == 4) {
-                    params = updateEvent(parsedList.get(1), parsedList.get(2),  parsedList.get(3));
+                    params = updateEvent(parsedList.get(2), parsedList.get(3));
                 }
-                url = UrlCreator.getUpdateEventUrl();
+                url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
                 requestCreator.makePutRequest(url, params);
                 break;
             case "delete" :
-                url = UrlCreator.getDeleteEventUrl();
+                url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
                 requestCreator.makeDeleteRequest(url, params);
                 break;
             default: ;
@@ -79,21 +80,17 @@ public class SlashService {
         return jsonString;
     }
 
-    private String updateEvent(String evtId, String startDate, String startTime, String duration) {
+    private String updateEvent(String startDate, String startTime, String duration) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
         String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
         String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
         return jsonString;
     }
 
-    private String updateEvent(String evtId, String startDate, String duration) {
+    private String updateEvent(String startDate, String duration) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate);
         String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
         String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
         return jsonString;
-    }
-
-    private void deleteEvent(String evtId) {
-        StringBuilder queryString = new StringBuilder();
     }
 }
