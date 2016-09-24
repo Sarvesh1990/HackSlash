@@ -26,7 +26,7 @@ public class RequestCreator {
 
 
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", flockApiUserToken);
+        con.setRequestProperty("X-Flock-User-Token", flockApiUserToken);
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -35,7 +35,7 @@ public class RequestCreator {
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("\nSending 'POST' request to URL : " + url + ", token : " + flockApiUserToken + ", params : " + params);
         System.out.println("Response Code : " + responseCode);
 
         BufferedReader in = new BufferedReader(

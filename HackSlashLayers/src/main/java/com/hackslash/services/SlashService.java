@@ -2,7 +2,7 @@ package com.hackslash.services;
 
 import com.hackslash.constants.RequestConstants;
 import com.hackslash.constants.SpecialChars;
-import com.hackslash.helper.Auth2;
+import com.hackslash.helper.FlockAPIUserToken;
 import com.hackslash.helper.JSONCreator;
 import com.hackslash.helper.UrlCreator;
 import com.hackslash.utils.RequestCreator;
@@ -21,14 +21,15 @@ import static com.hackslash.utils.ValidationUtil.isStringSet;
 public class SlashService {
     private Map<String, String> requestMap;
     private HttpServletResponse response;
-    private String userId;
-    private String authToken;
+    private String senderUserId;
+    private String senderAuthToken;
+    private String receiverCalenderId;
 
     public SlashService(Map<String, String> requestMap, HttpServletResponse response) {
         this.requestMap = requestMap;
         this.response = response;
-        this.userId = requestMap.get("userId");
-        this.authToken = Auth2.getAuthToken(this.userId);
+        senderUserId = requestMap.get(RequestConstants.USER_ID.getValue());
+        senderAuthToken = FlockAPIUserToken.getAuthToken(senderUserId);
     }
 
     public void processRequest() throws IOException {
@@ -46,65 +47,66 @@ public class SlashService {
         parsePattern(inputPattern);
     }
 
-    private void parsePattern(String inputPattern) {
+    private void parsePattern(String inputPattern) throws IOException {
         ArrayList<String> parsedList = (ArrayList) Arrays.asList(inputPattern.split(" "));
         if (parsedList.size() <= 1) {
             return;
         }
         String method = parsedList.get(0);
+        String params = "", url;
+        RequestCreator requestCreator = new RequestCreator(senderAuthToken);
         switch (method) {
             case "insert" :
                 if (parsedList.size() == 5) {
-                    insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
+                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
                 } else if (parsedList.size() == 4) {
-                    insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
+                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
                 }
-//                String url = UrlCreator.getInsertEventUrl();
-                RequestCreator requestCreator = new RequestCreator(this.authToken);
+                url = UrlCreator.getInsertEventUrl(receiverCalenderId);
+                requestCreator.makePostRequest(url, params);
                 break;
             case "update" :
                 if (parsedList.size() == 5) {
-                    updateEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
+                    params =  updateEvent(parsedList.get(2), parsedList.get(3), parsedList.get(4));
                 } else if (parsedList.size() == 4) {
-                    updateEvent(parsedList.get(1), parsedList.get(2),  parsedList.get(3));
+                    params = updateEvent(parsedList.get(2), parsedList.get(3));
                 }
+                url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
+                requestCreator.makePutRequest(url, params);
                 break;
-            case "delete" : deleteEvent(parsedList.get(1));
+            case "delete" :
+                url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
+                requestCreator.makeDeleteRequest(url, params);
                 break;
             default: ;
         }
     }
 
-    private void insertEvent(String startDate, String startTime, String duration, String evtDescription) {
+    private String insertEvent(String startDate, String startTime, String duration, String evtDescription) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
         String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
         String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
-
+        return jsonString;
     }
 
-    private void insertEvent(String startDate, String duration, String evtDescription) {
+    private String insertEvent(String startDate, String duration, String evtDescription) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate);
         String parsedEndDate =  TimeFormat.getEndDateFormat(parsedStartDate, duration);
         String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
+        return jsonString;
     }
 
-    private String updateEvent(String evtId, String startDate, String startTime, String duration) {
-        StringBuilder queryString = new StringBuilder();
+    private String updateEvent(String startDate, String startTime, String duration) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
-        queryString.append(parsedStartDate);
-        queryString.append(TimeFormat.getEndDateFormat(parsedStartDate, duration));
-        return queryString.toString();
+        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
+        return jsonString;
     }
 
-    private String updateEvent(String evtId, String startDate, String duration) {
-        StringBuilder queryString = new StringBuilder();
+    private String updateEvent(String startDate, String duration) {
         String parsedStartDate = TimeFormat.getDateFormat(startDate);
-        queryString.append(parsedStartDate);
-        queryString.append(TimeFormat.getEndDateFormat(parsedStartDate, duration));
-        return queryString.toString();
-    }
-
-    private void deleteEvent(String evtId) {
-        StringBuilder queryString = new StringBuilder();
+        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
+        return jsonString;
     }
 }

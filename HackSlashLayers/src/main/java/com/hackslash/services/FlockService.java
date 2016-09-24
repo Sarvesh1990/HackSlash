@@ -16,11 +16,10 @@ public class FlockService {
     public void getUserListFromGroup (final String groupId, Map<String, String> requestMap) throws IOException {
         if(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())) != null) {
             RequestCreator requestCreator = new RequestCreator(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken());
-            requestCreator.makePostRequest(Constants.GROUP_MEMBERS, JsonUtil.jsonEncode(new HashMap<String, String>(){
-                {
-                    put(RequestConstants.GROUP_ID.getValue(), groupId);
-                }
-            }));
+            Map<String, String> params = new HashMap<>();
+            params.put(RequestConstants.GROUP_ID.getValue(), groupId);
+            System.out.println("Params map : " + JsonUtil.jsonEncode(params) + ", GROUP Id : " + groupId);
+            requestCreator.makePostRequest(Constants.GROUP_MEMBERS, JsonUtil.jsonEncode(params));
         } else {
             System.out.println("User has not installed the app. How can he send message?");
         }
