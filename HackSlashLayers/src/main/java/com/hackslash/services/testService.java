@@ -19,7 +19,7 @@ import static com.hackslash.utils.ValidationUtil.safeReturn;
  * Created by apple on 24/09/16.
  */
 
-@WebServlet(name = "testService", urlPatterns = "/testService", loadOnStartup = 1)
+@WebServlet(name = "flockEvents", urlPatterns = "/flockEvents", loadOnStartup = 1)
 public class testService extends HttpServlet{
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("Request came");
