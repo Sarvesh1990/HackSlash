@@ -6,6 +6,7 @@ import com.hackslash.constants.Constants;
 import com.hackslash.constants.RequestConstants;
 import com.hackslash.constants.SpecialChars;
 import com.hackslash.pojos.UserTokenDetails;
+import com.hackslash.services.SlashService;
 import com.hackslash.utils.JsonUtil;
 import com.hackslash.utils.ParseUtil;
 import com.hackslash.utils.ValidationUtil;
@@ -49,16 +50,10 @@ public class FlockEvents extends HttpServlet{
                 Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(requestMap.get(RequestConstants.USER_TOKEN.getValue()), null, null, null));
                 System.out.println("User details first : "  + JsonUtil.jsonEncode(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue()))));
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.SLASH_COMMANDS.getValue())) {
-                String messageRecipient = requestMap.get(RequestConstants.CHAT.getValue());
-                if(isStringSet(messageRecipient)) {
-                    String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());
-                    if(messageRecipientList[0].equals("g")) {
-                        
-                    }
-                } else {
-                    System.out.println("Error with received slash command");
-                }
                 System.out.println("Slash : " + JsonUtil.jsonEncode(requestMap));
+                new SlashService(requestMap, response).processRequest();
+            } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_UNINSTALL.getValue())) {
+
             }
         }
     }
