@@ -16,7 +16,11 @@ public enum RequestConstants {
     , FLOCK_VALIDATION_TOKEN("flockValidationToken")
     , CHAT("chat")
     , TEXT("text")
-    , GROUP_ID("groupId");
+    , GROUP_ID("groupId")
+    , POST("POST")
+    , PUT("PUT")
+    , DELETE("DELETE")
+    , GET("GET");
 
     private String value;
     private byte[] bytes;

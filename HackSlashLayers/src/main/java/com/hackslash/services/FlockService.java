@@ -19,7 +19,7 @@ public class FlockService {
             Map<String, String> params = new HashMap<>();
             params.put(RequestConstants.GROUP_ID.getValue(), groupId);
             System.out.println("Params map : " + JsonUtil.jsonEncode(params) + ", GROUP Id : " + groupId);
-            requestCreator.makePostRequest(Constants.GROUP_MEMBERS, JsonUtil.jsonEncode(params));
+            requestCreator.makeRequestForFlock(Constants.GROUP_MEMBERS, JsonUtil.jsonEncode(params), RequestConstants.POST.getValue());
         } else {
             System.out.println("User has not installed the app. How can he send message?");
         }

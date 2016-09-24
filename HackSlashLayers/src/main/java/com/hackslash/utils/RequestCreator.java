@@ -16,54 +16,30 @@ public class RequestCreator {
         this.flockApiUserToken = flockApiUserToken;
     }
 
-    public void makePostRequest(String url, String params) throws IOException {
+    public void makeRequestForCalendar(String url, String params, String authorizationToken, String requestType) throws IOException {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-        //add reuqest header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        //add variable reuqest header
+        con.setRequestProperty("Authorization", authorizationToken);
+        doRequest(con, params, requestType);
+    }
 
+    public void makeRequestForFlock(String url, String params, String requestType) throws IOException {
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-        con.setRequestProperty("Content-Type", "application/json");
+        //add variable reuqest header
         con.setRequestProperty("X-Flock-User-Token", flockApiUserToken);
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(params);
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url + ", token : " + flockApiUserToken + ", params : " + params);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
-
+        doRequest(con, params, requestType);
     }
 
-    public void makePutRequest(String url, String params) throws IOException {
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-        //add reuqest header
-        con.setRequestMethod("PUT");
+    public void doRequest(HttpsURLConnection con, String params, String requestType) throws IOException {
+        con.setRequestMethod(requestType);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
 
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", flockApiUserToken);
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -72,44 +48,6 @@ public class RequestCreator {
         wr.close();
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
-    }
-
-    public void makeDeleteRequest(String url, String params) throws IOException {
-        URL obj = new URL(url);
-        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-
-        //add reuqest header
-        con.setRequestMethod("DELETE");
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", flockApiUserToken);
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(params);
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));

@@ -63,7 +63,7 @@ public class SlashService {
                     params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
                 }
                 url = UrlCreator.getInsertEventUrl(receiverCalenderId);
-                requestCreator.makePostRequest(url, params);
+//                requestCreator.makeRequestForCalendar(url, params, RequestConstants.POST.getValue());
                 break;
             case "update" :
                 if (parsedList.size() == 5) {
@@ -72,11 +72,11 @@ public class SlashService {
                     params = updateEvent(parsedList.get(2), parsedList.get(3));
                 }
                 url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
-                requestCreator.makePutRequest(url, params);
+//                requestCreator.makePutRequest(url, params);
                 break;
             case "delete" :
                 url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
-                requestCreator.makeDeleteRequest(url, params);
+//                requestCreator.makeDeleteRequest(url, params);
                 break;
             default: ;
         }
