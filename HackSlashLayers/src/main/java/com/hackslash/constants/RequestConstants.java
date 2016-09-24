@@ -8,7 +8,12 @@ public enum RequestConstants {
     FLOCK_REQUEST_NAME("name")
     , APP_INSTALL("app.install")
     , SLASH_COMMANDS("client.slashCommand")
-    , APP_UNINSTALL("app.uninstall");
+    , APP_UNINSTALL("app.uninstall")
+    , USER_ID("userId")
+    , USER_TOKEN("userToken")
+    , CODE("code")
+    , STATE("state")
+    , FLOCK_VALIDATION_TOKEN("flockValidationToken");
 
     private String value;
     private byte[] bytes;
