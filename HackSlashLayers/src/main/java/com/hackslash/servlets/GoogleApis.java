@@ -34,9 +34,13 @@ public class GoogleApis extends HttpServlet{
                 return;
             }
 
-            Map<String, String> stateMap = JsonUtil.jsonDecodeMap(request.getParameter(RequestConstants.STATE.getValue()));
 
-            if(Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue())) != null && Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue())).getFlockToken()
+        System.out.println("State map : " + request.getParameter("state"));
+            Map<String, String> stateMap = JsonUtil.jsonDecodeMap(request.getParameter(RequestConstants.STATE.getValue()));
+        System.out.println("User details Second: "  + JsonUtil.jsonEncode(Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue()))));
+
+
+        if(Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue())) != null && Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue())).getFlockToken()
                     .equals(stateMap.get(RequestConstants.USER_TOKEN.getValue()))) {
                 try {
                     TokenResponse tokenResponse =
