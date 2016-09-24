@@ -7,7 +7,7 @@ import com.hackslash.constants.Constants;
  */
 public class UrlCreator {
 
-    public static String getInsertEventUrl(calendarId) {
+    public static String getInsertEventUrl(String calendarId) {
         StringBuilder url = new StringBuilder();
         String baseUrl = "https://www.googleapis.com/calendar/v3/calendars";
         url.append(baseUrl);
@@ -17,7 +17,7 @@ public class UrlCreator {
         return url.toString();
     }
 
-    public static String getUpdateEventUrl(calendarId, evtId) {
+    public static String getUpdateEventUrl(String calendarId, String evtId) {
         StringBuilder url = new StringBuilder();
         String baseUrl = "https://www.googleapis.com/calendar/v3/calendars";
         url.append(baseUrl);
@@ -28,7 +28,7 @@ public class UrlCreator {
         return url.toString();
     }
 
-    public static String getDeleteEventUrl(calendarId, evtId) {
+    public static String getDeleteEventUrl(String calendarId, String evtId) {
         return getUpdateEventUrl(calendarId, evtId);
     }
 
