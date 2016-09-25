@@ -35,13 +35,13 @@ public class FlockService {
         }
     }
 
-    public void sendMessageToUser(String messageType, final String userId, String flockToken, final boolean appInstalled) throws IOException {
+    public void sendMessageToUser(String messageType, String userId, String flockToken, boolean appInstalled) throws IOException {
         RequestCreator requestCreator = new RequestCreator(flockToken);
         Map<String, Map<String, String>> params = new HashMap<>();
         Map<String, String> message = new HashMap<>();
         message.put(RequestConstants.TO.getValue(), userId);
         message.put(RequestConstants.TEXT.getValue(), Constants.MESSAGE.get(MessageTypes.MESSAGE_ADD_MEETING.getValue()).get(appInstalled));
-        params.put(RequestConstants.MESSAGE.getValue(), message);xx`x
+        params.put(RequestConstants.MESSAGE.getValue(), message);
         System.out.println("Params map : " + JsonUtil.jsonEncode(params));
         requestCreator.makeRequestForFlock(Constants.SEND_MESSAGE, JsonUtil.jsonEncode(params), RequestConstants.POST.getValue());
     }

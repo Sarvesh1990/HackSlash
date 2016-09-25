@@ -38,8 +38,8 @@ public class SlashService {
         String messageRecipient = requestMap.get(RequestConstants.CHAT.getValue());
         if(isStringSet(messageRecipient)) {
             String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());
+            FlockService flockService  = new FlockService();
             if(messageRecipientList[0].equals("g")) {
-                FlockService flockService  = new FlockService();
                 if(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())) != null) {
                     ArrayList<Map<String, String>> userList = flockService.getUserListFromGroup(messageRecipient, Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken());
                     if (userList != null) {
@@ -48,6 +48,9 @@ public class SlashService {
                 } else {
                     System.out.println("User has not installed the app. How can he send message?");
                 }
+            } else {
+                flockService.sendMessageToUser(MessageTypes.MESSAGE_ADD_MEETING.getValue(), requestMap.get(RequestConstants.CHAT.getValue()), Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken(),
+                        Constants.USER_TOKEN_MAP.containsKey(requestMap.get(RequestConstants.CHAT.getValue())));
             }
         } else {
             System.out.println("Error with received slash command");
