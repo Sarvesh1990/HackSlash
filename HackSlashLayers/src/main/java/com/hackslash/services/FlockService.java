@@ -46,12 +46,5 @@ public class FlockService {
         params.put(RequestConstants.MESSAGE.getValue(), message);
         System.out.println("Params map : " + JsonUtil.jsonEncode(params));
         requestCreator.makeRequestForFlock(Constants.SEND_MESSAGE, JsonUtil.jsonEncode(params), RequestConstants.POST.getValue());
-
-        if(appInstalled) {
-            CalenderListService calenderListService = new CalenderListService(Constants.USER_TOKEN_MAP.get(userId).getCalendarApiAuthToken(), userId);
-            String calendarId = calenderListService.makeRequest();
-            System.out.println("Calendar id is : " + calendarId);
-            Constants.USER_TOKEN_MAP.get(userId).setCalendarId(calendarId);
-        }
     }
 }

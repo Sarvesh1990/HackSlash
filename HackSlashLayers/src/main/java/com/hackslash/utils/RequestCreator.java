@@ -28,7 +28,7 @@ public class RequestCreator {
 
         }
 
-        con.setRequestProperty("Authorization", "Bearer ya29.Ci9pA8ZA2Mmjl9gC6RLU2THd8QgUhGcMi3Qz0mjOSDzATDlx1aeqR0UyxTwKHhaKgQ");
+        con.setRequestProperty("Authorization", userToken);
         if(requestType.equals(RequestConstants.GET.getValue())) {
             return doGet(con);
         } else {

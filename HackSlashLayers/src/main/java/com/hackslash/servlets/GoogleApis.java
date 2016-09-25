@@ -51,7 +51,7 @@ public class GoogleApis extends HttpServlet{
                                         new ClientParametersAuthentication(Constants.CLIENT_ID,
                                                 Constants.CLIENT_SECRET)).execute();
                     UserTokenDetails tokenDetails = Constants.USER_TOKEN_MAP.get(stateMap.get(RequestConstants.USER_ID.getValue()));
-                    tokenDetails.setCalendarApiAuthToken(tokenResponse.getAccessToken());
+                    tokenDetails.setCalendarApiAuthToken("Bearer " + tokenResponse.getAccessToken());
                     tokenDetails.setCalendarApiRefreshToken(tokenResponse.getRefreshToken());
                     tokenDetails.setCalendarTokenExpiry(System.currentTimeMillis() + tokenResponse.getExpiresInSeconds()*1000);
 

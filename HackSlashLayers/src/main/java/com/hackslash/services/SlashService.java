@@ -38,14 +38,17 @@ public class SlashService {
 
     public void processRequest() throws Exception {
         String messageRecipient = requestMap.get(RequestConstants.CHAT.getValue());
+        String inputPattern = requestMap.get(RequestConstants.TEXT.getValue());
         if(isStringSet(messageRecipient)) {
             String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());
             FlockService flockService  = new FlockService();
+            CalenderListService calendarListService = new CalenderListService();
             if(messageRecipientList[0].equals("g")) {
                 if(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())) != null) {
                     ArrayList<Map<String, String>> userList = flockService.getUserListFromGroup(messageRecipient, Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken());
                     if (userList != null) {
                         flockService.sendMessageToUserList(MessageTypes.MESSAGE_ADD_MEETING.getValue(), userList, senderAuthToken);
+                        calendarListService.setCalendarEventUserList(inputPattern, userList);
                     }
                 } else {
                     System.out.println("User has not installed the app. How can he send message?");
@@ -53,75 +56,10 @@ public class SlashService {
             } else {
                 flockService.sendMessageToUser(MessageTypes.MESSAGE_ADD_MEETING.getValue(), requestMap.get(RequestConstants.CHAT.getValue()), Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken(),
                         Constants.USER_TOKEN_MAP.containsKey(requestMap.get(RequestConstants.CHAT.getValue())));
+                calendarListService.setCalendarEventForUser(inputPattern, requestMap.get(RequestConstants.CHAT.getValue()));
             }
         } else {
             System.out.println("Error with received slash command");
         }
-        String inputPattern = requestMap.get(RequestConstants.TEXT.getValue());
-        parsePattern(inputPattern);
-    }
-
-    private void parsePattern(String inputPattern) throws Exception {
-        List<String> parsedList = Arrays.asList(inputPattern.split(" "));
-        if (parsedList.size() <= 1) {
-            return;
-        }
-        String method = parsedList.get(0);
-        String params = "", url;
-        RequestCreator requestCreator = new RequestCreator(senderAuthToken);
-        receiverCalenderId = Constants.USER_TOKEN_MAP.get(senderUserId).getCalendarId();
-        switch (method) {
-            case "insert" :
-                if (parsedList.size() == 5) {
-                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
-                } else if (parsedList.size() == 4) {
-                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
-                }
-                url = UrlCreator.getInsertEventUrl(receiverCalenderId);
-                requestCreator.makeRequestForCalendar(url, params, RequestConstants.POST.getValue(), senderUserId);
-                break;
-            case "update" :
-                if (parsedList.size() == 5) {
-                    params =  updateEvent(parsedList.get(2), parsedList.get(3), parsedList.get(4));
-                } else if (parsedList.size() == 4) {
-                    params = updateEvent(parsedList.get(2), parsedList.get(3));
-                }
-                url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
-                requestCreator.makeRequestForCalendar(url, params, RequestConstants.PUT.getValue(), senderUserId);
-                break;
-            case "delete" :
-                url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
-                requestCreator.makeRequestForCalendar(url, params, RequestConstants.DELETE.getValue(), senderUserId);
-                break;
-            default: ;
-        }
-    }
-
-    private String insertEvent(String startDate, String startTime, String duration, String evtDescription) {
-        String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
-        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
-        String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
-        return jsonString;
-    }
-
-    private String insertEvent(String startDate, String duration, String evtDescription) {
-        String parsedStartDate = TimeFormat.getDateFormat(startDate);
-        String parsedEndDate =  TimeFormat.getEndDateFormat(parsedStartDate, duration);
-        String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
-        return jsonString;
-    }
-
-    private String updateEvent(String startDate, String startTime, String duration) {
-        String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
-        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
-        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
-        return jsonString;
-    }
-
-    private String updateEvent(String startDate, String duration) {
-        String parsedStartDate = TimeFormat.getDateFormat(startDate);
-        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
-        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
-        return jsonString;
     }
 }
