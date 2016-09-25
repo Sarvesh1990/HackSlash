@@ -48,13 +48,15 @@ public class FlockEvents extends HttpServlet{
         if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()) != null){
             if(requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_INSTALL.getValue())) {
                 String userToken = requestMap.get(RequestConstants.USER_TOKEN.getValue());
-                Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(userToken, null, null, null));
+                Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(userToken, null, null, null, null));
                 System.out.println("User details first : "  + JsonUtil.jsonEncode(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue()))));
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.SLASH_COMMANDS.getValue())) {
                 System.out.println("Slash : " + JsonUtil.jsonEncode(requestMap));
                 try {
                     new SlashService(requestMap, response).processRequest();
                 } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_UNINSTALL.getValue())) {

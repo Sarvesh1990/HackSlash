@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by apple on 25/09/16.
  */
 public class FlockService {
-    public ArrayList<Map<String, String>> getUserListFromGroup (String groupId, String flockToken) throws IOException {
+    public ArrayList<Map<String, String>> getUserListFromGroup (String groupId, String flockToken) throws Exception {
         RequestCreator requestCreator = new RequestCreator(flockToken);
         Map<String, String> params = new HashMap<>();
         params.put(RequestConstants.GROUP_ID.getValue(), groupId);
@@ -27,7 +27,7 @@ public class FlockService {
         return groupMembersList;
     }
 
-    public void sendMessageToUserList (String messageType, ArrayList<Map<String, String>> groupMembersList, String flockToken) throws IOException, ParseException {
+    public void sendMessageToUserList (String messageType, ArrayList<Map<String, String>> groupMembersList, String flockToken) throws Exception {
         for(Map<String, String> groupMemberDetails : groupMembersList) {
             if(Constants.USER_TOKEN_MAP.get(groupMemberDetails.get(RequestConstants.ID.getValue())) != null) {
                 sendMessageToUser(messageType, groupMemberDetails.get(RequestConstants.ID.getValue()), flockToken, true);
@@ -37,7 +37,7 @@ public class FlockService {
         }
     }
 
-    public void sendMessageToUser(String messageType, String userId, String flockToken, boolean appInstalled) throws IOException, ParseException {
+    public void sendMessageToUser(String messageType, String userId, String flockToken, boolean appInstalled) throws Exception {
         RequestCreator requestCreator = new RequestCreator(flockToken);
         Map<String, Map<String, String>> params = new HashMap<>();
         Map<String, String> message = new HashMap<>();
@@ -48,9 +48,10 @@ public class FlockService {
         requestCreator.makeRequestForFlock(Constants.SEND_MESSAGE, JsonUtil.jsonEncode(params), RequestConstants.POST.getValue());
 
         if(appInstalled) {
-            CalenderListService calenderListService = new CalenderListService(Constants.USER_TOKEN_MAP.get(userId).getCalendarApiAuthToken());
+            CalenderListService calenderListService = new CalenderListService(Constants.USER_TOKEN_MAP.get(userId).getCalendarApiAuthToken(), userId);
             String calendarId = calenderListService.makeRequest();
             System.out.println("Calendar id is : " + calendarId);
+            Constants.USER_TOKEN_MAP.get(userId).setCalendarId(calendarId);
         }
     }
 }

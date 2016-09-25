@@ -1,5 +1,8 @@
 package com.hackslash.utils;
 
+import com.hackslash.constants.Constants;
+import com.hackslash.constants.RequestConstants;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -16,29 +19,43 @@ public class RequestCreator {
         this.userToken = userToken;
     }
 
-    public String makeRequestForCalendar(String url, String params, String requestType) throws IOException {
+    public String makeRequestForCalendar(String url, String params, String requestType, String userId) throws Exception {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
-        con.setRequestProperty("Authorization", userToken);
-        return doRequest(con, params, requestType);
+        if(Constants.USER_TOKEN_MAP.get(userId).getCalendarTokenExpiry() <= System.currentTimeMillis() - 100) {
+
+        }
+
+        con.setRequestProperty("Authorization", "Bearer ya29.Ci9pA8ZA2Mmjl9gC6RLU2THd8QgUhGcMi3Qz0mjOSDzATDlx1aeqR0UyxTwKHhaKgQ");
+        if(requestType.equals(RequestConstants.GET.getValue())) {
+            return doGet(con);
+        } else {
+            return doPost(con, params, requestType);
+        }
     }
 
-    public String makeRequestForFlock(String url, String params, String requestType) throws IOException {
+    public String makeRequestForFlock(String url, String params, String requestType) throws Exception {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
         con.setRequestProperty("X-Flock-User-Token", userToken);
-        return doRequest(con, params, requestType);
+
+        if(requestType.equals(RequestConstants.GET.getValue())) {
+            return doGet(con);
+        } else {
+            return doPost(con, params, requestType);
+        }
     }
 
-    public String doRequest(HttpsURLConnection con, String params, String requestType) throws IOException {
+    public String doPost(HttpsURLConnection con, String params, String requestType) throws IOException {
         String output;
         con.setRequestMethod(requestType);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
+        System.out.println("Params map : " + params + ", request type : " + requestType);
 
         con.setRequestProperty("Content-Type", "application/json");
         // Send post request
@@ -64,5 +81,25 @@ public class RequestCreator {
         //print result
         System.out.println(output);
         return output;
+    }
+
+    private String doGet(HttpsURLConnection con) throws Exception {
+        con.setRequestMethod("GET");
+
+        int responseCode = con.getResponseCode();
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        String output = response.toString();
+        System.out.println(output);
+        return output;
+
     }
 }

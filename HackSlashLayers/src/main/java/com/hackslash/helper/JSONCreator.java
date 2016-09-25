@@ -7,23 +7,23 @@ public class JSONCreator {
 
     public static String createInsertEventJSON(String startTime, String endTime, String evtDescription) {
         return "{\n" +
-                " \"end\": {\n" +
-                "  \"dateTime\":" + startTime +"\n" +
-                " },\n" +
                 " \"start\": {\n" +
-                "  \"dateTime\":" + endTime + "\n" +
+                "  \"dateTime\": \"" + startTime +"\"\n" +
                 " },\n" +
-                " \"summary\": "+ evtDescription + "\n" +
+                " \"end\": {\n" +
+                "  \"dateTime\": \"" + endTime + "\"\n" +
+                " },\n" +
+                " \"summary\": \""+ evtDescription + "\"\n" +
                 "}";
     }
 
     public static String createUpdateEventJSON(String startTime, String endTime) {
         return "{\n" +
-                " \"end\": {\n" +
-                "  \"dateTime\":" + startTime +"\n" +
-                " },\n" +
                 " \"start\": {\n" +
-                "  \"dateTime\":" + endTime + "\n" +
+                "  \"dateTime\": \"" + startTime +"\" \n" +
+                " },\n" +
+                " \"end\": {\n" +
+                "  \"dateTime\": \"" + endTime + "\"\n" +
                 " },\n" +
                 "}";
     }

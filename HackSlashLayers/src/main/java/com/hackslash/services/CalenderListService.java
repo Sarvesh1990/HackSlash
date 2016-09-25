@@ -18,16 +18,19 @@ import java.io.IOException;
 public class CalenderListService {
 
     private String calenderAuthToken;
+    private String userId;
 
-    public CalenderListService(String calenderAuthToken) {
+    public CalenderListService(String calenderAuthToken, String userId) {
         this.calenderAuthToken = calenderAuthToken;
+        this.userId = userId;
     }
 
-    public String makeRequest() throws IOException, ParseException {
+    public String makeRequest() throws Exception {
         RequestCreator requestCreator = new RequestCreator(calenderAuthToken);
-        String output =  requestCreator.makeRequestForCalendar(Constants.CALENDAR_LIST_API, SpecialChars.BLANK_STRING.getValue(), RequestConstants.GET.getValue());
+        String output =  requestCreator.makeRequestForCalendar(Constants.CALENDAR_LIST_API, SpecialChars.BLANK_STRING.getValue(), RequestConstants.GET.getValue(), userId);
         return getCalendarId(output);
     }
+
     private String getCalendarId(String output) throws ParseException {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(output);

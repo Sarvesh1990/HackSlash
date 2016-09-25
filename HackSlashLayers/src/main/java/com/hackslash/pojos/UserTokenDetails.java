@@ -8,12 +8,14 @@ public class UserTokenDetails {
     private String calendarApiAuthToken;
     private String calendarApiRefreshToken;
     private Long calendarTokenExpiry;
+    private String calendarId;
 
-    public UserTokenDetails(String flockToken, String calendarApiAuthToken, String calendarApiRefreshToken, Long calendarTokenExpiry) {
+    public UserTokenDetails(String flockToken, String calendarApiAuthToken, String calendarApiRefreshToken, Long calendarTokenExpiry, String calendarId) {
         this.flockToken = flockToken;
         this.calendarApiAuthToken = calendarApiAuthToken;
         this.calendarApiRefreshToken = calendarApiRefreshToken;
         this.calendarTokenExpiry = calendarTokenExpiry;
+        this.calendarId = calendarId;
     }
 
     public Long getCalendarTokenExpiry() {
@@ -46,5 +48,13 @@ public class UserTokenDetails {
 
     public void setCalendarApiRefreshToken(String calendarApiRefreshToken) {
         this.calendarApiRefreshToken = calendarApiRefreshToken;
+    }
+
+    public String getCalendarId() {
+        return calendarId;
+    }
+
+    public void setCalendarId(String calendarId) {
+        this.calendarId = calendarId;
     }
 }

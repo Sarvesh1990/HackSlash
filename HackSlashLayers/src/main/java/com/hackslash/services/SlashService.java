@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static com.hackslash.utils.ValidationUtil.isStringSet;
@@ -35,7 +36,7 @@ public class SlashService {
         senderAuthToken = FlockAPIUserToken.getAuthToken(senderUserId);
     }
 
-    public void processRequest() throws IOException, ParseException {
+    public void processRequest() throws Exception {
         String messageRecipient = requestMap.get(RequestConstants.CHAT.getValue());
         if(isStringSet(messageRecipient)) {
             String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());
@@ -60,14 +61,15 @@ public class SlashService {
         parsePattern(inputPattern);
     }
 
-    private void parsePattern(String inputPattern) throws IOException {
-        ArrayList<String> parsedList = (ArrayList) Arrays.asList(inputPattern.split(" "));
+    private void parsePattern(String inputPattern) throws Exception {
+        List<String> parsedList = Arrays.asList(inputPattern.split(" "));
         if (parsedList.size() <= 1) {
             return;
         }
         String method = parsedList.get(0);
         String params = "", url;
         RequestCreator requestCreator = new RequestCreator(senderAuthToken);
+        receiverCalenderId = Constants.USER_TOKEN_MAP.get(senderUserId).getCalendarId();
         switch (method) {
             case "insert" :
                 if (parsedList.size() == 5) {
@@ -76,7 +78,7 @@ public class SlashService {
                     params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
                 }
                 url = UrlCreator.getInsertEventUrl(receiverCalenderId);
-//                requestCreator.makeRequestForCalendar(url, params, RequestConstants.POST.getValue());
+                requestCreator.makeRequestForCalendar(url, params, RequestConstants.POST.getValue(), senderUserId);
                 break;
             case "update" :
                 if (parsedList.size() == 5) {
@@ -85,11 +87,11 @@ public class SlashService {
                     params = updateEvent(parsedList.get(2), parsedList.get(3));
                 }
                 url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
-//                requestCreator.makePutRequest(url, params);
+                requestCreator.makeRequestForCalendar(url, params, RequestConstants.PUT.getValue(), senderUserId);
                 break;
             case "delete" :
                 url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
-//                requestCreator.makeDeleteRequest(url, params);
+                requestCreator.makeRequestForCalendar(url, params, RequestConstants.DELETE.getValue(), senderUserId);
                 break;
             default: ;
         }
