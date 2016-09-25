@@ -13,14 +13,15 @@ public class Constants {
     public static final Map<String, UserTokenDetails> USER_TOKEN_MAP = new HashMap<>();
     public static  Map<String, UserCalenderIPMap> USER_CALENDERID_MAP = new HashMap<>();
     public static final String APP_SECRET =  "6a0866c2-2d43-4954-b203-3a2ca3cad51b";
-    public static final String AUTH_DOMAIN = "http://9e4e1f73.ngrok.io";
+    public static final String AUTH_DOMAIN = "http://6c356317.ngrok.io";
     public static final String OAUTH_DOMAIN = "https://accounts.google.com/o/oauth2/token";
-    public static final String REDIRECT_URL = "http://47e2c11b.ngrok.io/HackSlashService/googleApis";
+    public static final String REDIRECT_URL = "http://060d3909.ngrok.io/HackSlashService/googleApis";
     public static final String CLIENT_ID = "297408651022-5hogd5neoi4om4iqajsc7fqih1enajbo.apps.googleusercontent.com";
     public static final String CLIENT_SECRET = "NaaYhfOrSliVs0URPlxvNjFS";
     public static final String API_KEY = "AIzaSyBsAR7EZeJnmlOU0DwZfT1jeHBVwob7C_o";
     public static final String GROUP_MEMBERS = "https://api.flock.co/v1/groups.getMembers";
     public static final String SEND_MESSAGE = "https://api.flock.co/v1/chat.sendMessage";
+    public static final String CALENDAR_LIST_API = "https://content.googleapis.com/calendar/v3/users/me/calendarList";
     public static final Map<String, Map<Boolean, String>> MESSAGE = new HashMap<String, Map<Boolean, String>>() {
         {
             put(MessageTypes.MESSAGE_ADD_MEETING.getValue(), new HashMap<Boolean, String>(){

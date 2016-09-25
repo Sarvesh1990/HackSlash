@@ -8,6 +8,7 @@ import com.hackslash.helper.FlockAPIUserToken;
 import com.hackslash.helper.JSONCreator;
 import com.hackslash.helper.UrlCreator;
 import com.hackslash.utils.RequestCreator;
+import org.json.simple.parser.ParseException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class SlashService {
         senderAuthToken = FlockAPIUserToken.getAuthToken(senderUserId);
     }
 
-    public void processRequest() throws IOException {
+    public void processRequest() throws IOException, ParseException {
         String messageRecipient = requestMap.get(RequestConstants.CHAT.getValue());
         if(isStringSet(messageRecipient)) {
             String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());

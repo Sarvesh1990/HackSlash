@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  */
 public class ParseUtil {
     public static String getPostRequestBody(HttpServletRequest request) throws IOException {
-
+        System.out.println("Parsing");
         String body = null;
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;

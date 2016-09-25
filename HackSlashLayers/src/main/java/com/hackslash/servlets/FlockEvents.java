@@ -10,6 +10,7 @@ import com.hackslash.services.CalenderListService;
 import com.hackslash.services.SlashService;
 import com.hackslash.utils.JsonUtil;
 import com.hackslash.utils.ParseUtil;
+import org.json.simple.parser.ParseException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,13 +49,14 @@ public class FlockEvents extends HttpServlet{
             if(requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_INSTALL.getValue())) {
                 String userToken = requestMap.get(RequestConstants.USER_TOKEN.getValue());
                 Constants.USER_TOKEN_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserTokenDetails(userToken, null, null, null));
-                CalenderListService calenderListService = new CalenderListService(userToken);
-                String calendarId = calenderListService.makeRequest();
-                Constants.USER_CALENDERID_MAP.put(requestMap.get(RequestConstants.USER_ID.getValue()), new UserCalenderIPMap(RequestConstants.USER_ID.getValue(), calendarId));
                 System.out.println("User details first : "  + JsonUtil.jsonEncode(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue()))));
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.SLASH_COMMANDS.getValue())) {
                 System.out.println("Slash : " + JsonUtil.jsonEncode(requestMap));
-                new SlashService(requestMap, response).processRequest();
+                try {
+                    new SlashService(requestMap, response).processRequest();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             } else if (requestMap.get(RequestConstants.FLOCK_REQUEST_NAME.getValue()).equals(RequestConstants.APP_UNINSTALL.getValue())) {
 
             }

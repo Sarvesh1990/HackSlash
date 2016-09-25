@@ -31,9 +31,4 @@ public class UrlCreator {
     public static String getDeleteEventUrl(String calendarId, String evtId) {
         return getUpdateEventUrl(calendarId, evtId);
     }
-
-    public static String getCalenderListEventUrl() {
-        String baseUrl = "https://content.googleapis.com/calendar/v3/users/me/calendarList";
-        return baseUrl;
-    }
 }

@@ -11,17 +11,17 @@ import java.net.URL;
  * Created by ankit.go on 25-09-2016.
  */
 public class RequestCreator {
-    private String flockApiUserToken;
-    public RequestCreator(String flockApiUserToken) {
-        this.flockApiUserToken = flockApiUserToken;
+    private String userToken;
+    public RequestCreator(String userToken) {
+        this.userToken = userToken;
     }
 
-    public String makeRequestForCalendar(String url, String params, String authorizationToken, String requestType) throws IOException {
+    public String makeRequestForCalendar(String url, String params, String requestType) throws IOException {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
-        con.setRequestProperty("Authorization", authorizationToken);
+        con.setRequestProperty("Authorization", userToken);
         return doRequest(con, params, requestType);
     }
 
@@ -30,7 +30,7 @@ public class RequestCreator {
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
-        con.setRequestProperty("X-Flock-User-Token", flockApiUserToken);
+        con.setRequestProperty("X-Flock-User-Token", userToken);
         return doRequest(con, params, requestType);
     }
 
