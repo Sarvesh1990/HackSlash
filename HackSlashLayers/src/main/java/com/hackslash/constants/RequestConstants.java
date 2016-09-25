@@ -20,7 +20,10 @@ public enum RequestConstants {
     , POST("POST")
     , PUT("PUT")
     , DELETE("DELETE")
-    , GET("GET");
+    , GET("GET")
+    , ID("id")
+    , MESSAGE("message")
+    , TO("to");
 
     private String value;
     private byte[] bytes;

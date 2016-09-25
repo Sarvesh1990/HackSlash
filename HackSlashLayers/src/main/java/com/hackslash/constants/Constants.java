@@ -18,4 +18,15 @@ public class Constants {
     public static final String CLIENT_SECRET = "NaaYhfOrSliVs0URPlxvNjFS";
     public static final String API_KEY = "AIzaSyBsAR7EZeJnmlOU0DwZfT1jeHBVwob7C_o";
     public static final String GROUP_MEMBERS = "https://api.flock.co/v1/groups.getMembers";
+    public static final String SEND_MESSAGE = "https://api.flock.co/v1/chat.sendMessage";
+    public static final Map<String, Map<Boolean, String>> MESSAGE = new HashMap<String, Map<Boolean, String>>() {
+        {
+            put(MessageTypes.MESSAGE_ADD_MEETING.getValue(), new HashMap<Boolean, String>(){
+                {
+                    put(true, "Let's have a meeting");
+                    put(false, "Please download app");
+                }
+            });
+        }
+    };
 }

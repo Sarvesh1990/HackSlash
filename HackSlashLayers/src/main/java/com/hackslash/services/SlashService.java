@@ -1,5 +1,7 @@
 package com.hackslash.services;
 
+import com.hackslash.constants.Constants;
+import com.hackslash.constants.MessageTypes;
 import com.hackslash.constants.RequestConstants;
 import com.hackslash.constants.SpecialChars;
 import com.hackslash.helper.FlockAPIUserToken;
@@ -38,7 +40,14 @@ public class SlashService {
             String[] messageRecipientList = messageRecipient.split(SpecialChars.COLON.getValue());
             if(messageRecipientList[0].equals("g")) {
                 FlockService flockService  = new FlockService();
-                flockService.getUserListFromGroup(messageRecipient, requestMap);
+                if(Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())) != null) {
+                    ArrayList<Map<String, String>> userList = flockService.getUserListFromGroup(messageRecipient, Constants.USER_TOKEN_MAP.get(requestMap.get(RequestConstants.USER_ID.getValue())).getFlockToken());
+                    if (userList != null) {
+                        flockService.sendMessageToUserList(MessageTypes.MESSAGE_ADD_MEETING.getValue(), userList, senderAuthToken);
+                    }
+                } else {
+                    System.out.println("User has not installed the app. How can he send message?");
+                }
             }
         } else {
             System.out.println("Error with received slash command");
