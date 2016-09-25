@@ -35,6 +35,7 @@ public class RequestCreator {
     }
 
     public String doRequest(HttpsURLConnection con, String params, String requestType) throws IOException {
+        String output;
         con.setRequestMethod(requestType);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
@@ -59,6 +60,9 @@ public class RequestCreator {
         }
         in.close();
 
-        return response.toString();
+        output = response.toString();
+        //print result
+        System.out.println(output);
+        return output;
     }
 }
