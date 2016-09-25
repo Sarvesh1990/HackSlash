@@ -46,11 +46,14 @@ public class TimeFormat {
     }
 
     public static String getEndDateFormat(String startDate, String duration){
-        StringBuilder dateTime = new StringBuilder();
-
-        dateTime.append("T");
-
-        dateTime.append(CodeConstants.GMT_TIME.getValue());
+        String[] split = startDate.split("T");
+        String[] time = split[1].split(":");
+        StringBuilder dateTime = new StringBuilder(split[0]).append("T");
+        dateTime.append(Integer.parseInt(time[0]) + Integer.parseInt(duration));
+        for(int i = 1; i < time.length; i ++) {
+            dateTime.append(":");
+            dateTime.append(time[i]);
+        }
         return dateTime.toString();
     }
 }

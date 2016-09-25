@@ -16,25 +16,26 @@ public class RequestCreator {
         this.flockApiUserToken = flockApiUserToken;
     }
 
-    public void makeRequestForCalendar(String url, String params, String authorizationToken, String requestType) throws IOException {
+    public String makeRequestForCalendar(String url, String params, String authorizationToken, String requestType) throws IOException {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
         con.setRequestProperty("Authorization", authorizationToken);
-        doRequest(con, params, requestType);
+        return doRequest(con, params, requestType);
     }
 
-    public void makeRequestForFlock(String url, String params, String requestType) throws IOException {
+    public String makeRequestForFlock(String url, String params, String requestType) throws IOException {
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
         //add variable reuqest header
         con.setRequestProperty("X-Flock-User-Token", flockApiUserToken);
-        doRequest(con, params, requestType);
+        return doRequest(con, params, requestType);
     }
 
-    public void doRequest(HttpsURLConnection con, String params, String requestType) throws IOException {
+    public String doRequest(HttpsURLConnection con, String params, String requestType) throws IOException {
+        String output;
         con.setRequestMethod(requestType);
         con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
@@ -58,9 +59,10 @@ public class RequestCreator {
             response.append(inputLine);
         }
         in.close();
-
+        output = response.toString();
         //print result
-        System.out.println(response.toString());
+        System.out.println(output);
+        return output;
 
     }
 }

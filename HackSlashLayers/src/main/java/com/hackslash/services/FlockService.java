@@ -23,6 +23,5 @@ public class FlockService {
         } else {
             System.out.println("User has not installed the app. How can he send message?");
         }
-
     }
 }
