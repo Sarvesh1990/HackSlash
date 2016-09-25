@@ -25,7 +25,7 @@ public class RequestCreator {
 
         //add variable reuqest header
         if(Constants.USER_TOKEN_MAP.get(userId).getCalendarTokenExpiry() <= System.currentTimeMillis() - 100) {
-
+            RefreshToken.refreshToken(Constants.USER_TOKEN_MAP.get(userId));
         }
 
         con.setRequestProperty("Authorization", userToken);

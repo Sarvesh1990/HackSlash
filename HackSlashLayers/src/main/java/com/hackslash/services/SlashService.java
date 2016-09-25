@@ -61,5 +61,70 @@ public class SlashService {
         } else {
             System.out.println("Error with received slash command");
         }
+        String inputPattern = requestMap.get(RequestConstants.TEXT.getValue());
+        parsePattern(inputPattern);
+    }
+
+    private void parsePattern(String inputPattern) throws IOException {
+        List<String> parsedList =  Arrays.asList(inputPattern.split(" "));
+        if (parsedList.size() <= 1) {
+            return;
+        }
+        String method = parsedList.get(0);
+        String params = "", url;
+        RequestCreator requestCreator = new RequestCreator(senderAuthToken);
+        switch (method) {
+            case "insert" :
+                if (parsedList.size() == 5) {
+                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3), parsedList.get(4));
+                } else if (parsedList.size() == 4) {
+                    params = insertEvent(parsedList.get(1), parsedList.get(2), parsedList.get(3));
+                }
+                url = UrlCreator.getInsertEventUrl(receiverCalenderId);
+//                requestCreator.makeRequestForCalendar(url, params, RequestConstants.POST.getValue());
+                break;
+            case "update" :
+                if (parsedList.size() == 5) {
+                    params =  updateEvent(parsedList.get(2), parsedList.get(3), parsedList.get(4));
+                } else if (parsedList.size() == 4) {
+                    params = updateEvent(parsedList.get(2), parsedList.get(3));
+                }
+                url = UrlCreator.getUpdateEventUrl(receiverCalenderId, parsedList.get(1));
+//                requestCreator.makePutRequest(url, params);
+                break;
+            case "delete" :
+                url = UrlCreator.getDeleteEventUrl(receiverCalenderId, parsedList.get(1));
+//                requestCreator.makeDeleteRequest(url, params);
+                break;
+            default: ;
+        }
+    }
+
+    private String insertEvent(String startDate, String startTime, String duration, String evtDescription) {
+        String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
+        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
+        return jsonString;
+    }
+
+    private String insertEvent(String startDate, String duration, String evtDescription) {
+        String parsedStartDate = TimeFormat.getDateFormat(startDate);
+        String parsedEndDate =  TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createInsertEventJSON(parsedStartDate, parsedEndDate, evtDescription);
+        return jsonString;
+    }
+
+    private String updateEvent(String startDate, String startTime, String duration) {
+        String parsedStartDate = TimeFormat.getDateFormat(startDate, startTime);
+        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
+        return jsonString;
+    }
+
+    private String updateEvent(String startDate, String duration) {
+        String parsedStartDate = TimeFormat.getDateFormat(startDate);
+        String parsedEndDate = TimeFormat.getEndDateFormat(parsedStartDate, duration);
+        String jsonString = JSONCreator.createUpdateEventJSON(parsedStartDate, parsedEndDate);
+        return jsonString;
     }
 }
